@@ -13,12 +13,23 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
     for linkage_index = 1:leg_params.num_linkages
         
         %linkage_index is the label of the current link
-        %your code here
+        
+        % extracting the two vertices that are adjacent to this link
+        vertex_a = leg_params.link_to_vertex_list(linkage_index, 1);
+        vertex_b = leg_params.link_to_vertex_list(linkage_index, 2);
+
+        % extracting the x and y coordinates of vertex a
+        x_a = complete_vertex_coords(2*vertex_a - 1);
+        y_a = complete_vertex_coords(2*vertex_a);
+
+        % extracting the x and y coordinates of vertex b
+        x_b = complete_vertex_coords(2*vertex_b - 1);
+        y_b = complete_vertex_coords(2*vertex_b);
 
         %line_x and line_y should both be two element arrays containing
         %the x and y coordinates of the line segment describing the current link
-        line_x = %your code here
-        line_y = %your code here
+        line_x = [x_a, x_b];
+        line_y = [y_a, y_b];
         set(leg_drawing.linkages{linkage_index},'xdata',line_x,'ydata',line_y); 
     end
 
@@ -30,8 +41,8 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
 
         %dot_x and dot_y should both be scalars
         %specifically the x and y coordinates of the corresponding vertex
-        dot_x = %your code here
-        dot_y = %your code here
+        dot_x = complete_vertex_coords(2*vertex_index - 1);
+        dot_y = complete_vertex_coords(2*vertex_index);
         
         set(leg_drawing.vertices{vertex_index},'xdata',dot_x,'ydata',dot_y); 
     end
@@ -40,8 +51,8 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
 
     %crank_x and crank_y should both be two element arrays
     %containing the x and y coordinates of the line segment describing the crank
-    crank_x = %your code here
-    crank_y = %your code here
+    crank_x = [0, complete_vertex_coords(1)];
+    crank_y = [0, complete_vertex_coords(2)];
     
     set(leg_drawing.crank,'xdata',crank_x,'ydata',crank_y);
 end

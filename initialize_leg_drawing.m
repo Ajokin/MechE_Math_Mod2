@@ -10,6 +10,12 @@
 %       leg_drawing.vertices is a cell array, where each element corresponds
 %       to a plot of one of the vertices in the linkage
 function leg_drawing = initialize_leg_drawing(leg_params)
+    figure;
+    axis equal;
+    axis([-150 100 -150 100]);
+    grid on;
+    hold on;
+
     leg_drawing = struct();
     leg_drawing.linkages = cell(leg_params.num_linkages,1);
     
@@ -21,7 +27,7 @@ function leg_drawing = initialize_leg_drawing(leg_params)
     
     leg_drawing.vertices = cell(leg_params.num_vertices,1);
     for vertex_index = 1:leg_params.num_vertices
-        leg_drawing.vertices{vertex_index} = line([0],[0],'marker',...
+        leg_drawing.vertices{vertex_index} = line(0,0,'marker',...
           'o','markerfacecolor','r','markeredgecolor','r','markersize',8);
     end
 end
