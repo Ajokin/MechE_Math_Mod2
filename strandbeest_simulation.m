@@ -16,6 +16,8 @@ function strandbeest_simulation()
     [ -50; -100]...  %vertex 7 guess  
     ];   
 
+    err = link_length_error_func(vertex_coords_guess, leg_params);
+
     %your code here
     %this code will likely involve a loop, where you call
     %compute_coords at each iteration
