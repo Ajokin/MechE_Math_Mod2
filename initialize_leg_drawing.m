@@ -33,7 +33,7 @@ function leg_drawing = initialize_leg_drawing(leg_params)
           'o','markerfacecolor','r','markeredgecolor','r','markersize',8);
     end
     
-    set(fig1, 'units', 'pixels', 'position', [0 0 1440 1080])
+    set(fig1, 'units', 'pixels', 'position', [0 0 3840 2160])
     ax = gca;
     ax.FontSize = 30;
     title("Strandbeest Leg Animation", "Interpreter", "latex")
