@@ -9,14 +9,16 @@
 %       leg_drawing.crank is a plot of the crank link
 %       leg_drawing.vertices is a cell array, where each element corresponds
 %       to a plot of one of the vertices in the linkage
+%       leg_drawing.foot_path is the path traced by vertex 7
 function leg_drawing = initialize_leg_drawing(leg_params)
-    figure;
+    fig1 = figure(1);
     axis equal;
     axis([-150 100 -150 100]);
     grid on;
     hold on;
 
     leg_drawing = struct();
+    leg_drawing.fig = fig1;
     leg_drawing.linkages = cell(leg_params.num_linkages,1);
     
     for linkage_index = 1:leg_params.num_linkages
@@ -30,4 +32,11 @@ function leg_drawing = initialize_leg_drawing(leg_params)
         leg_drawing.vertices{vertex_index} = line(0,0,'marker',...
           'o','markerfacecolor','r','markeredgecolor','r','markersize',8);
     end
+    
+    set(fig1, 'units', 'pixels', 'position', [0 0 1440 1080])
+    ax = gca;
+    ax.FontSize = 30;
+    title("Strandbeest Leg Animation", "Interpreter", "latex")
+    xlabel("X Location (-)", "Interpreter", "latex")
+    ylabel("Y Location (-)", "Interpreter", "latex")
 end

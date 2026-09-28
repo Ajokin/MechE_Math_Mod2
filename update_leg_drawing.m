@@ -44,7 +44,7 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
         dot_x = complete_vertex_coords(2*vertex_index - 1);
         dot_y = complete_vertex_coords(2*vertex_index);
         
-        set(leg_drawing.vertices{vertex_index},'xdata',dot_x,'ydata',dot_y); 
+        set(leg_drawing.vertices{vertex_index},'xdata',dot_x,'ydata',dot_y);
     end
 
     %your code here
@@ -55,4 +55,10 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
     crank_y = [0, complete_vertex_coords(2)];
     
     set(leg_drawing.crank,'xdata',crank_x,'ydata',crank_y);
+
+     % Plot vertex 7 path
+    dot_x7 = complete_vertex_coords(2*7 - 1);
+    dot_y7 = complete_vertex_coords(2*7);
+
+    plot(dot_x7, dot_y7, 'b.', MarkerSize=15);
 end

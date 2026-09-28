@@ -1,9 +1,17 @@
 %runs strandbeest simulation
 function strandbeest_simulation()
-
+    close all;
     leg_params = define_leg_parameters();
 
     leg_drawing = initialize_leg_drawing(leg_params);
+
+    mypath1 = 'C:\Users\akutuva\Documents\GitHub\MechE_Math_Mod2\';
+    fname = 'strandbeest_animation.avi';
+    input_fname = [mypath1, fname];
+
+    writerObj = VideoWriter(input_fname);
+    writerObj.FrameRate = 60;
+    open(writerObj);
 
     %column vector of initial guesses
     %for each vertex location.
@@ -16,14 +24,10 @@ function strandbeest_simulation()
     [-100;  -50];... %vertex 5 guess
     [ -50;  -50];... %vertex 6 guess
     [ -50; -100]...  %vertex 7 guess  
-    ];  
+    ];
 
-
-    % length_errors = link_length_error_func(vertex_coords_guess, leg_params);
-    % coord_errors = fixed_coord_error_func(vertex_coords_guess, leg_params, 0);
-
-    num_steps = 200;    
-    theta_array = linspace(0,2*pi(), num_steps);
+    num_steps = 400;    
+    theta_array = linspace(0,6*pi(), num_steps);
     current_coords = vertex_coords_guess;
 
     for i = 1:num_steps
@@ -31,10 +35,14 @@ function strandbeest_simulation()
         current_coords = compute_coords(current_coords, leg_params, theta);
         update_leg_drawing(current_coords, leg_drawing, leg_params);
         drawnow;
+
+        % Capture the current figure
+        current_frame = getframe(leg_drawing.fig);
+
+        % Write the frame to the video
+        writeVideo(writerObj, current_frame);
     end
 
-    %your code here
-    %this code will likely involve a loop, where you call
-    %compute_coords at each iteration
-    %you likely will also need to call update_leg_drawing each iteration
+    % Close the video
+    close(writerObj);
 end
