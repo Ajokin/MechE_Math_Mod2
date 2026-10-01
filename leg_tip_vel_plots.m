@@ -20,7 +20,7 @@ function leg_tip_vel_plots()
     dx_tip_m2 = zeros(1, num_steps);
     dy_tip_m2 = zeros(1, num_steps);
     
-    % input the starting coordinates of the stranbeest
+    % input the starting coordinates of the strandbeest
     vertex_coords = [
         15.0;   0.0;
        -38.0;  -7.8;
@@ -102,5 +102,4 @@ function leg_tip_vel_plots()
     legend('Location', 'best', 'FontSize', 12);
     
     exportgraphics(fig, 'Velocity_Comparison_Plot.png', 'Resolution', 600);
-
 end
