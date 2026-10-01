@@ -8,7 +8,7 @@
 %       leg_drawing.crank is a plot of the crank link
 %       leg_drawing.vertices is a cell array, where each element corresponds
 %       to a plot of one of the vertices in the linkage
-function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
+function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params, x7_path, y7_path)
     %iterate through each link, and update corresponding link plot
     for linkage_index = 1:leg_params.num_linkages
         
@@ -56,9 +56,6 @@ function update_leg_drawing(complete_vertex_coords, leg_drawing, leg_params)
     
     set(leg_drawing.crank,'xdata',crank_x,'ydata',crank_y);
 
-     % Plot vertex 7 path
-    dot_x7 = complete_vertex_coords(2*7 - 1);
-    dot_y7 = complete_vertex_coords(2*7);
-
-    plot(dot_x7, dot_y7, 'b.', MarkerSize=15);
+    % drawing the foot path
+    set(leg_drawing.foot_path, 'XData', x7_path, 'YData', y7_path);
 end

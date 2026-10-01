@@ -26,14 +26,23 @@ function strandbeest_simulation()
     [ -50; -100]...  %vertex 7 guess  
     ];
 
-    num_steps = 400;    
-    theta_array = linspace(0,6*pi(), num_steps);
+    num_steps = 700;    
+    theta_array = linspace(0,10*pi(), num_steps);
     current_coords = vertex_coords_guess;
+
+    % Pre-allocate coordinate history for vertex 7
+    x7_path = zeros(1, num_steps);
+    y7_path = zeros(1, num_steps);
 
     for i = 1:num_steps
         theta = theta_array(i);
         current_coords = compute_coords(current_coords, leg_params, theta);
-        update_leg_drawing(current_coords, leg_drawing, leg_params);
+        
+        % Store current position of vertex 7
+        x7_path(i) = current_coords(2*7 - 1);
+        y7_path(i) = current_coords(2*7);
+
+        update_leg_drawing(current_coords, leg_drawing, leg_params, x7_path(1:i), y7_path(1:i));
         drawnow;
 
         % Capture the current figure
