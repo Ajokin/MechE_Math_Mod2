@@ -80,25 +80,27 @@ function leg_tip_vel_plots()
     % horizontal velocity
     subplot(2, 1, 1);
     hold on; grid on;
+    xlim([0 2*pi])
     
-    plot(theta_vals, dx_tip_m1, 'b-', 'LineWidth', 3, 'DisplayName', 'Method 1: Linear Algebra');
+    plot(theta_vals, dx_tip_m1, 'b-', 'LineWidth', 3, 'DisplayName', 'Method 1: Implicit Method');
     plot(theta_vals, dx_tip_m2, 'r--', 'LineWidth', 2.5, 'DisplayName', 'Method 2: Finite Differences');
     
-    title('Comparison of Horizontal Leg Tip Velocity ($\frac{dx_{tip}}{d\theta}$)', 'FontSize', 16);
+    title('Comparison of Horizontal Leg Tip Velocity $\left(\frac{dx_{tip}}{d\theta}\right)$', 'FontSize', 16);
     xlabel('Crank Angle $\theta$ (rad)', 'FontSize', 14);
-    ylabel('Velocity $\frac{dx_{tip}}{d\theta}$ (-)', 'FontSize', 14);
+    ylabel('Velocity $\left(\frac{dx_{tip}}{d\theta}\right)$ (-)', 'FontSize', 14);
     legend('Location', 'best', 'FontSize', 12); 
     
     % vertical velocity
     subplot(2, 1, 2);
     hold on; grid on;
+    xlim([0 2*pi])
     
-    plot(theta_vals, dy_tip_m1, 'b-', 'LineWidth', 3, 'DisplayName', 'Method 1: Linear Algebra');
+    plot(theta_vals, dy_tip_m1, 'b-', 'LineWidth', 3, 'DisplayName', 'Method 1: Implicit Method');
     plot(theta_vals, dy_tip_m2, 'r--', 'LineWidth', 2.5, 'DisplayName', 'Method 2: Finite Differences');
     
-    title('Comparison of Vertical Leg Tip Velocity ($\frac{dy_{tip}}{d\theta}$)', 'FontSize', 16);
+    title('Comparison of Vertical Leg Tip Velocity $\left(\frac{dy_{tip}}{d\theta}\right)$', 'FontSize', 16);
     xlabel('Crank Angle $\theta$ (rad)', 'FontSize', 14);
-    ylabel('Velocity $\frac{dy_{tip}}{d\theta}$ (-)', 'FontSize', 14);
+    ylabel('Velocity $\left(\frac{dy_{tip}}{d\theta}\right)$ (-)', 'FontSize', 14);
     legend('Location', 'best', 'FontSize', 12);
     
     exportgraphics(fig, 'Velocity_Comparison_Plot.png', 'Resolution', 600);

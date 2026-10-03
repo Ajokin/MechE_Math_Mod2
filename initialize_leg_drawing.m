@@ -14,6 +14,11 @@ function leg_drawing = initialize_leg_drawing(leg_params)
     fig1 = figure(1);
     axis equal;
     axis([-150 100 -150 100]);
+
+    y_tick_values = yticks; 
+    xticks(y_tick_values);
+    yticks(y_tick_values);
+
     grid on;
     hold on;
 
@@ -33,7 +38,7 @@ function leg_drawing = initialize_leg_drawing(leg_params)
           'o','markerfacecolor','r','markeredgecolor','r','markersize',8);
     end
     
-    leg_drawing.foot_path = plot(NaN, NaN, 'b-', 'LineWidth', 1.5);
+    leg_drawing.foot_path = plot(NaN, NaN, 'b--', 'LineWidth', 1.5);
 
     set(fig1, 'units', 'pixels', 'position', [0 0 3840 2160])
     ax = gca;
