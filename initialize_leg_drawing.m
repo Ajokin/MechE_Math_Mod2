@@ -10,6 +10,8 @@
 %       leg_drawing.vertices is a cell array, where each element corresponds
 %       to a plot of one of the vertices in the linkage
 %       leg_drawing.foot_path is the path traced by the foot vertex
+%       leg_drawing.velocity is the arrow showing the foot velocity
+%       leg_drawing.fig is the figure everything gets drawn in
 function leg_drawing = initialize_leg_drawing(leg_params)
     fig1 = figure(1);
     axis equal;
@@ -38,7 +40,13 @@ function leg_drawing = initialize_leg_drawing(leg_params)
           'o','markerfacecolor','r','markeredgecolor','r','markersize',8);
     end
     
-    leg_drawing.foot_path = plot(NaN, NaN, 'b--', 'LineWidth', 1.5);
+    % solid line so it matches the velocity overlay video we submitted
+    leg_drawing.foot_path = plot(NaN, NaN, 'b-', 'LineWidth', 1.5);
+
+    % velocity arrow that starts at the foot, gets moved every frame in
+    % update_leg_drawing
+    leg_drawing.velocity = quiver(0, 0, 0, 0, 'm', 'LineWidth', 3, ...
+        'MaxHeadSize', 1, 'AutoScale', 'off');
 
     set(fig1, 'units', 'pixels', 'position', [0 0 3840 2160])
     ax = gca;
@@ -46,4 +54,9 @@ function leg_drawing = initialize_leg_drawing(leg_params)
     title("Strandbeest Leg Animation", "Interpreter", "latex")
     xlabel("X Position (-)", "Interpreter", "latex")
     ylabel("Y Position (-)", "Interpreter", "latex")
+    ax.TickLabelInterpreter = "latex";
+
+    legend([leg_drawing.foot_path, leg_drawing.velocity], ...
+        {"Foot path", "Foot velocity, $dV_{foot}/d\theta$ (scaled)"}, ...
+        "Interpreter", "latex", "Location", "northeast")
 end

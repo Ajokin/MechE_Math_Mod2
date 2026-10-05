@@ -11,8 +11,15 @@ function vertex_coords_root = compute_coords(vertex_coords_guess, leg_params, th
     %your code here
 
     fun = @(x) linkage_error_func(x, leg_params, theta);
-   
-    [vertex_coords_root, ~] = multi_newton_solver(fun, vertex_coords_guess);
+
+    % the default 1e-14 never gets hit here since the squared link lengths
+    % are in the thousands (round off keeps |f| around 1e-12), so newton was
+    % running all 200 iterations on most frames. 1e-10 is still really accurate
+    solver_params = struct();
+    solver_params.ftol = 1e-10;
+    solver_params.dxmin = 1e-10;
+
+    [vertex_coords_root, ~] = multi_newton_solver(fun, vertex_coords_guess, solver_params);
 
     %you will likely need to make a wrapper function of linkage_error_func
     %so that it is only a function of vertex_coords 

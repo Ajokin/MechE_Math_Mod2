@@ -5,9 +5,11 @@ function strandbeest_simulation()
 
     leg_drawing = initialize_leg_drawing(leg_params);
 
-    mypath1 = 'C:\Users\akutuva\Documents\GitHub\MechE_Math_Mod2\';
+    % saves the video one folder up (right outside the repo) so it works on
+    % everyone's computer. the 4k version is also over github's 100 MB limit
+    mypath1 = fileparts(fileparts(mfilename('fullpath')));
     fname = 'strandbeest_animation.avi';
-    input_fname = [mypath1, fname];
+    input_fname = fullfile(mypath1, fname);
 
     writerObj = VideoWriter(input_fname);
     writerObj.FrameRate = 60;
@@ -34,15 +36,23 @@ function strandbeest_simulation()
     x7_path = zeros(1, num_steps);
     y7_path = zeros(1, num_steps);
 
+    % dV/dtheta is pretty big so the arrow gets scaled down to stay readable
+    velocity_scale = 0.5;
+
     for i = 1:num_steps
         theta = theta_array(i);
         current_coords = compute_coords(current_coords, leg_params, theta);
-        
+
         % Store current position of vertex 7
         x7_path(i) = current_coords(2*7 - 1);
         y7_path(i) = current_coords(2*7);
 
-        update_leg_drawing(current_coords, leg_drawing, leg_params, x7_path(1:i), y7_path(1:i));
+        % foot velocity from compute_velocities. theta only goes up over
+        % time so this points the way the foot is actually moving
+        dVdtheta = compute_velocities(current_coords, leg_params, theta);
+        foot_velocity = velocity_scale * [dVdtheta(2*7 - 1); dVdtheta(2*7)];
+
+        update_leg_drawing(current_coords, leg_drawing, leg_params, x7_path(1:i), y7_path(1:i), foot_velocity);
         drawnow;
 
         % Capture the current figure

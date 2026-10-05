@@ -21,14 +21,18 @@ function leg_tip_vel_plots()
     dy_tip_m2 = zeros(1, num_steps);
     
     % input the starting coordinates of the strandbeest
-    vertex_coords = [
-        15.0;   0.0;
-       -38.0;  -7.8;
-       -13.0;  35.0;
-       -45.0;  25.0;
-       -45.0; -25.0;
-       -15.0; -40.0;
-       -25.0; -85.0
+    % using the same guess as strandbeest_simulation now. the guess we had
+    % here before also satisfied every constraint, but newton landed on a
+    % flipped version of the leg (vertex 5 folds in next to vertex 2), so
+    % the plots weren't for the same leg as the animation
+    vertex_coords = [...
+    [   0;   50];... %vertex 1 guess
+    [ -50;    0];... %vertex 2 guess
+    [ -50;   50];... %vertex 3 guess
+    [-100;    0];... %vertex 4 guess
+    [-100;  -50];... %vertex 5 guess
+    [ -50;  -50];... %vertex 6 guess
+    [ -50; -100]...  %vertex 7 guess
     ];
 
     % loops through 1 rotation of the crank
@@ -38,29 +42,15 @@ function leg_tip_vel_plots()
         % for the given theta, find the location of each vertex
         vertex_coords = compute_coords(vertex_coords, leg_params, theta);
         
-        % wrapper function to put linkage_error_func in terms of vertices
-        fun_V = @(V) linkage_error_func(V, leg_params, theta);
+        % method 1: linear algebra, solves M*dVdtheta = B inside
+        % compute_velocities
+        dVdtheta_m1 = compute_velocities(vertex_coords, leg_params, theta);
 
-        % calculates jacobian of vertices
-        J = approximate_jacobian(fun_V, vertex_coords);
-        
-        % calculates the error right before this theta and right after it
-        dtheta = 1e-6; 
-        F_plus = linkage_error_func(vertex_coords, leg_params, theta + dtheta);
-        F_minus = linkage_error_func(vertex_coords, leg_params, theta - dtheta);
-        
-        % calculating average velocity before and after theta
-        dFdtheta = (F_plus - F_minus) / (2 * dtheta);
-        
-        % velocity of tip
-        dVdtheta_m1 = J \ (-dFdtheta);
-        
-        % calculates vertices before and after the theta
-        V_plus = compute_coords(vertex_coords, leg_params, theta + dtheta);
-        V_minus = compute_coords(vertex_coords, leg_params, theta - dtheta);
-        
-        % calculates the velocity at theta using finite differences method
-        dVdtheta_m2 = (V_plus - V_minus) / (2 * dtheta);
+        % method 2: wrapper so compute_coords is only a function of theta,
+        % then approximate_jacobian does the finite difference for us
+        % (central difference with the same 1e-6 step)
+        coords_of_theta = @(th) compute_coords(vertex_coords, leg_params, th);
+        dVdtheta_m2 = approximate_jacobian(coords_of_theta, theta);
         
         % extracts the velocity of vertex 7 at that theta
         dx_tip_m1(i) = dVdtheta_m1(13);
@@ -69,6 +59,10 @@ function leg_tip_vel_plots()
         dx_tip_m2(i) = dVdtheta_m2(13);
         dy_tip_m2(i) = dVdtheta_m2(14);
     end
+
+    % how far apart the two methods are (for the report)
+    fprintf('largest difference in dx_tip/dtheta: %.2e\n', max(abs(dx_tip_m1 - dx_tip_m2)));
+    fprintf('largest difference in dy_tip/dtheta: %.2e\n', max(abs(dy_tip_m1 - dy_tip_m2)));
 
     % latex plotter
     set(0, 'defaultTextInterpreter', 'latex');
@@ -88,7 +82,9 @@ function leg_tip_vel_plots()
     title('Comparison of Horizontal Leg Tip Velocity $\left(\frac{dx_{tip}}{d\theta}\right)$', 'FontSize', 16);
     xlabel('Crank Angle $\theta$ (rad)', 'FontSize', 14);
     ylabel('Velocity $\left(\frac{dx_{tip}}{d\theta}\right)$ (-)', 'FontSize', 14);
-    legend('Location', 'best', 'FontSize', 12); 
+    % 'best' put this one on top of the curve coming back up near theta = 4,
+    % the bottom left corner is empty for this plot
+    legend('Location', 'southwest', 'FontSize', 12);
     
     % vertical velocity
     subplot(2, 1, 2);
@@ -101,7 +97,7 @@ function leg_tip_vel_plots()
     title('Comparison of Vertical Leg Tip Velocity $\left(\frac{dy_{tip}}{d\theta}\right)$', 'FontSize', 16);
     xlabel('Crank Angle $\theta$ (rad)', 'FontSize', 14);
     ylabel('Velocity $\left(\frac{dy_{tip}}{d\theta}\right)$ (-)', 'FontSize', 14);
-    legend('Location', 'best', 'FontSize', 12);
+    legend('Location', 'northwest', 'FontSize', 12);
     
     exportgraphics(fig, 'Velocity_Comparison_Plot.png', 'Resolution', 600);
 end
